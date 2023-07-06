@@ -26,6 +26,9 @@ Route::get("posts/{post}", function ($slug) {
     // The path to the post
     $path = __DIR__ . "/../resources/posts/{$slug}.html";
 
+    // Used for debugging
+    // ddd("path");
+
     // Send user back to homepage if file doesn't exist
     if (!file_exists($path)) {
         return redirect("/");
@@ -37,4 +40,6 @@ Route::get("posts/{post}", function ($slug) {
     return view("post", [
         "post" => $post
     ]);
-});
+
+    // Using "where" and regular expression to constraint the url endpoint
+})->where("post", "[A-z_\-]+");
