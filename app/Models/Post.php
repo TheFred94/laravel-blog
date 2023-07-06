@@ -4,9 +4,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\File;
 
 class Post
 {
+    // A class that gives static access all sorts of functionality
+    public static function all()
+    {
+        $files =  File::files(resource_path("posts/"));
+
+        // Maps over the the array of files and returns an item for each item in the array
+        return array_map(
+            fn ($file) => $file->getContents(),
+            $files
+        );
+    }
 
     public static function find($slug)
     {
@@ -16,7 +28,7 @@ class Post
             throw new ModelNotFoundException();
         }
 
-        // Gets the content of the file, chache it and return
+        // Gets the content of the file, cache it and return
         return cache()->remember("posts.{$slug}", 1200, fn () => file_get_contents($path));
     }
 }

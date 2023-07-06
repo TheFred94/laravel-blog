@@ -19,7 +19,10 @@ use App\Models\Post;
 
 Route::get('/', function () {
 
-    return view('posts');
+    // Returns all the posts to the view
+    return view('posts', [
+        'posts' => Post::all()
+    ]);
 });
 
 // Post Route variable from post view using the slug variable
