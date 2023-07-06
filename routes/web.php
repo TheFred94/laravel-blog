@@ -20,7 +20,20 @@ Route::get('/', function () {
     return view('posts');
 });
 
+// Post Route variable from post view using the slug variable
+Route::get("posts/{post}", function ($slug) {
 
-Route::get("post", function () {
-    return view("post");
+    // The path to the post
+    $path = __DIR__ . "/../resources/posts/{$slug}.html";
+
+    if (!file_exists($path)) {
+        return redirect("/");
+    }
+
+    // The post variable
+    $post = file_get_contents($path);
+
+    return view("post", [
+        "post" => $post
+    ]);
 });
