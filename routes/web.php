@@ -26,6 +26,7 @@ Route::get("posts/{post}", function ($slug) {
     // The path to the post
     $path = __DIR__ . "/../resources/posts/{$slug}.html";
 
+    // Send user back to homepage if file doesn't exist
     if (!file_exists($path)) {
         return redirect("/");
     }
