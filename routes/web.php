@@ -24,19 +24,27 @@ Route::get('/', function () {
 Route::get("posts/{post}", function ($slug) {
 
     // The path to the post
-    $path = __DIR__ . "/../resources/posts/{$slug}.html";
+
 
     // Used for debugging
     // ddd("path");
 
-    // Send user back to homepage if file doesn't exist
-    if (!file_exists($path)) {
+    // Checks if file exists if not return to homepage
+    if (!file_exists($path = __DIR__ . "/../resources/posts/{$slug}.html")) {
         return redirect("/");
     }
 
-    // The post variable
-    $post = file_get_contents($path);
+    // Caches the post for 20 minutes
+    $post = cache()->remember("posts.{$slug}", now()->addMinutes(20), function () use ($path) {
+        var_dump("file_get_contents");
 
+        // If it does exist fetch the content of the file
+        return file_get_contents($path);
+    });
+
+
+
+    // Pass the content of the file to the user/view
     return view("post", [
         "post" => $post
     ]);
