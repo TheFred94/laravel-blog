@@ -31,18 +31,17 @@ Route::get('/', function () {
             $document->title,
             $document->excerpt,
             $document->date,
-            $document->body,
+            $document->body(),
+            $document->slug,
         );
     }
 
-    ddd($posts);
+    // ddd($posts);
 
-
-
-    // // Returns all the posts to the view
-    // return view('posts', [
-    //     'posts' => Post::all()
-    // ]);
+    // Returns all the posts to the view
+    return view('posts', [
+        'posts' => $posts
+    ]);
 });
 
 // Post Route variable from post view using the slug variable
