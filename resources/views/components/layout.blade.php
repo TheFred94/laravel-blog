@@ -1,12 +1,5 @@
 <!-- A layout file that controls the layout for a page to declare the html once, instead of declaring it in every single view-->
 
-<!-- New CSS or JS files would also be added here -->
-
-<!-- #1 Create the layout file. -->
-<!-- #2 yeild the content like down below (can be named anything)-->
-<!-- #3 Create a section for the content with the decided name in the view file-->
-
-
 <!doctype html>
 
 <head>
@@ -23,5 +16,5 @@
     </header>
 
     <!-- Any of the contents from the view are yeilded here-->
-    @yield('content')
+    {{ $slot }}
 </body>
