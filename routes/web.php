@@ -21,26 +21,9 @@ use Illuminate\Support\Facades\File;
 
 
 Route::get('/', function () {
-    $files =  File::files(resource_path("posts"));
-    $posts = [];
-
-    foreach ($files as $file) {
-        $document = YamlFrontMatter::parseFile($file);
-
-        $posts[] = new Post(
-            $document->title,
-            $document->excerpt,
-            $document->date,
-            $document->body(),
-            $document->slug,
-        );
-    }
-
-    // ddd($posts);
-
-    // Returns all the posts to the view
+    // ** Post objects are passed to the view 
     return view('posts', [
-        'posts' => $posts
+        'posts' => Post::all()
     ]);
 });
 
@@ -50,7 +33,6 @@ Route::get("posts/{post}", function ($slug) {
     return view("post", [
         'post' => Post::find($slug)
     ]);
-    // Used for debugging
-    // ddd("path");
 
+    // Using regular expressions to constrict the endpoint 
 })->where("post", "[A-z_\-]+");

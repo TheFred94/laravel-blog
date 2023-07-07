@@ -5,6 +5,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\File;
+use Spatie\YamlFrontMatter\YamlFrontMatter;
 
 class Post
 {
@@ -31,13 +32,22 @@ class Post
     // A class that gives static access all sorts of functionality
     public static function all()
     {
-        $files =  File::files(resource_path("posts/"));
 
-        // Maps over the the array of files and returns an item for each item in the array
-        return array_map(
-            fn ($file) => $file->getContents(),
-            $files
-        );
+        // Find all of the the files in the post collection and map over them
+        return collect(File::files(resource_path("posts")))
+
+            // ** Maps over each item and for each item parse that file into a document
+            ->map(fn ($file) => YamlFrontMatter::parseFile($file))
+
+            // ** Maps over the collection of documents and build the post object
+            ->map(fn ($document) => new Post(
+                $document->title,
+                $document->excerpt,
+                $document->date,
+                // Why is body a function here?
+                $document->body(),
+                $document->slug,
+            ));
     }
 
     public static function find($slug)
