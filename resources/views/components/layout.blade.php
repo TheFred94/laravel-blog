@@ -15,6 +15,6 @@
         @yield('banner')
     </header>
 
-    <!-- Any of the contents from the view are yeilded here-->
+    <!-- Any of the contents from the view are slottet here-->
     {{ $slot }}
 </body>
