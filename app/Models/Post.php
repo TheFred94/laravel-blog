@@ -32,33 +32,31 @@ class Post
     // A class that gives static access all sorts of functionality
     public static function all()
     {
+        // ** Caches the posts forever
+        return cache()->rememberForever('posts.all', function () {
+            // Find all of the the files in the post collection and map over them
+            return collect(File::files(resource_path("posts")))
 
-        // Find all of the the files in the post collection and map over them
-        return collect(File::files(resource_path("posts")))
+                // ** Maps over each item and for each item parse that file into a document
+                ->map(fn ($file) => YamlFrontMatter::parseFile($file))
 
-            // ** Maps over each item and for each item parse that file into a document
-            ->map(fn ($file) => YamlFrontMatter::parseFile($file))
-
-            // ** Maps over the collection of documents and build the post object
-            ->map(fn ($document) => new Post(
-                $document->title,
-                $document->excerpt,
-                $document->date,
-                // Why is body a function here?
-                $document->body(),
-                $document->slug,
-            ));
+                // ** Maps over the collection of documents and build the post object
+                ->map(fn ($document) => new Post(
+                    $document->title,
+                    $document->excerpt,
+                    $document->date,
+                    // Why is body a function here?
+                    $document->body(),
+                    $document->slug,
+                ))
+                // ** Sorts by date in descending order
+                ->sortByDesc('date');
+        });
     }
-
     public static function find($slug)
     {
-        // Checks if file exists if not throw an exeption. Else return the content of the post
-        base_path();
-        if (!file_exists($path = resource_path("posts/{$slug}.html"))) {
-            throw new ModelNotFoundException();
-        }
+        // Of all the blog posts, find the one with a slug that matches the one that was requested
 
-        // Gets the content of the file, cache it and return
-        return cache()->remember("posts.{$slug}", 1200, fn () => file_get_contents($path));
+        return static::all()->firstWhere('slug', $slug);
     }
 }
