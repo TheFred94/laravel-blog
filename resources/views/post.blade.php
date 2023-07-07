@@ -9,7 +9,7 @@
 
 <body>
     <article>
-        <h1>{!! $post->title !!}</h1>
+        <h1>{{$post->title}}</h1>
 
         <div>
             <!-- Using the exclamation points to treat it as html -->

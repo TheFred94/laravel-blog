@@ -10,10 +10,15 @@
 
 <body>
 
-    <!-- Using the @ symbol instead of <?php "content" ?> - Will be compiled into vanilla php  -->
+    <!-- Using the @ symbol instead of <?php ?> - Will be compiled into vanilla php  -->
 
     @foreach ($posts as $post)
-    <article class="mt-12 pt-12">
+
+    <!-- Using the loop variable which is accessable inside a foreach loop gains access to information about the loop. -->
+    {{-- @dd($loop) --}}
+
+    <!-- Using the loop-variable to style on elements -->
+    <article class="{{ $loop->even ? 'bg-white' : ''}}">
         <h1>
             <a class="" href=" /posts/{{ $post->slug }}">
                 {{ $post->title }}
